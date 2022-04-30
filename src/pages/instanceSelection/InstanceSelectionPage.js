@@ -12,7 +12,7 @@ export const InstanceSelectionPage = () => {
   const navigate = useNavigate();
 
   const submit = () => {
-    dispatch(upgradeWebSocket(new WebSocket(`ws://146.190.231.201/:8083/?instance=${formField?.current?.getFieldValue('message')}`)));
+    dispatch(upgradeWebSocket(new WebSocket(`ws://146.190.231.201:8083/?instance=${formField?.current?.getFieldValue('message')}`)));
     navigate('/game');
   }
 
