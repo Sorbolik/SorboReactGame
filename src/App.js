@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Routes, Route, Link } from "react-router-dom";
-import { InstanceSelectionPage } from './pages/instanceSelection/InstanceSelectionPage';
+import { RoomSelectionPage } from './pages/RoomSelection/RoomSelectionPage';
 import { GamePage } from './pages/game/GamePage';
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Routes>
-          <Route path="/" element={<InstanceSelectionPage />} />
+          <Route path="/" element={<RoomSelectionPage />} />
           <Route path="/game" element={<GamePage />} />
         </Routes>
       </header>

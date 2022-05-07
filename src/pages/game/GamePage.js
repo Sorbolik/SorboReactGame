@@ -10,43 +10,54 @@ export const GamePage = () => {
     const LEFT_KEYS = ['97', '65', 'a', 'A'];
     const RIGHT_KEYS = ['100', '68', 'd', 'D'];
 
-    const webSocketInstance = useSelector((state) => state.websocket.value);
-    const [updateMovement, setUpdateMovement] = useState({ asd: 'das' });
-    const [movement, setMovement] = useState('');
+    const webSocketRoom = useSelector((state) => state.websocket.value);
+    const [players, setPlayers] = useState([]);
+    const [uuid, setUuid] = useState([]);
+    const [index, setIndex] = useState(0);
 
     const handler = (event) => {
         event.preventDefault();
-        if (ESCAPE_KEYS.includes(String(event.key))) {
+        if (index < 2) {
+            if (ESCAPE_KEYS.includes(String(event.key))) {
 
+            }
+            if (UP_KEYS.includes(String(event.key))) {
+                webSocketRoom.send(JSON.stringify({ uuid: uuid, message: 'UP' }));
+            }
+            if (DOWN_KEYS.includes(String(event.key))) {
+                webSocketRoom.send(JSON.stringify({ uuid: uuid, message: 'DOWN' }));
+            }
+            if (LEFT_KEYS.includes(String(event.key))) {
+                webSocketRoom.send(JSON.stringify({ uuid: uuid, message: 'LEFT' }));
+            }
+            if (RIGHT_KEYS.includes(String(event.key))) {
+                webSocketRoom.send(JSON.stringify({ uuid: uuid, message: 'RIGHT' }));
+            }
         }
-        if (UP_KEYS.includes(String(event.key))) {
-            webSocketInstance.send('UP')
-        }
-        if (DOWN_KEYS.includes(String(event.key))) {
-            webSocketInstance.send('DOWN')
-        }
-        if (LEFT_KEYS.includes(String(event.key))) {
-            webSocketInstance.send('LEFT')
-        }
-        if (RIGHT_KEYS.includes(String(event.key))) {
-            webSocketInstance.send('RIGHT')
-        }
+
     }
 
     useEventListener('keydown', handler);
 
     useEffect(() => {
-        if (webSocketInstance) {
-            webSocketInstance.onmessage = (message) => {
-                setMovement(message.data);
-                setUpdateMovement({ asd: 'das' });
+        if (webSocketRoom) {
+            webSocketRoom.onmessage = (response) => {
+                let parsedResponse = JSON.parse(response.data);
+                if (parsedResponse.uuid) {
+                    setUuid(parsedResponse.uuid);
+                    setIndex(parsedResponse.index)
+                } else {
+                    setPlayers([parsedResponse.first, parsedResponse.second]);
+                }
             }
         }
     }, [])
 
+
     return (
-        <><div>Game Page</div>
-            <Canvas movement={movement} updateMovement={updateMovement}>
+        <>
+            {(index > 1) && <div>SPECTATOR MODE</div>}
+            <Canvas players={players} uuid={uuid}>
             </Canvas>
         </>
 

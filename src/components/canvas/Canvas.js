@@ -1,21 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { Player } from '../Player/Player';
 
-const Canvas = props => {
+const Canvas = ({ players, uuid }) => {
 
     const canvasRef = useRef(null);
     const [context, setContext] = useState(null);
-    let [deltaX, setDeltaX] = useState(0);
-    let [deltaY, setDeltaY] = useState(0);
-
-    const draw = () => {
-        if (context) {
-            context.fillStyle = 'red';
-            context.fillRect(30 + deltaX, 30 + deltaY, 50, 50);
-        }
-    }
-    useEffect(() => {
-        draw()
-    }, [deltaY, deltaX])
+    const [updateMovement, setUpdateMovement] = useState({ asd: 'das' });
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -25,29 +15,33 @@ const Canvas = props => {
     }, [])
 
     useEffect(() => {
-        console.log(props.movement);
-        if (context) {
-            context.clearRect(30 + deltaX, 30 + deltaY, 50, 50);
+        console.log(players);
+        setUpdateMovement({ asd: 'das' });
+        return () => {
+            if (context) {
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            }
         }
-        switch (props.movement) {
-            case 'UP':
-                setDeltaY(deltaY - 3);
-                break;
-            case 'DOWN':
-                setDeltaY(deltaY + 3);
-                break;
-            case 'LEFT':
-                setDeltaX(deltaX - 3);
-                break;
-            case 'RIGHT':
-                setDeltaX(deltaX + 3);
-                break;
-            default:
-                break;
-        }
-    }, [props.updateMovement])
+    }, [players])
 
-    return <canvas ref={canvasRef} {...props} />
+    return <canvas ref={canvasRef}>
+        {players && players.map((elem, i) => {
+            // if (elem !== 'SPECTATOR') {
+            return <Player key={i}
+                x={elem?.x}
+                y={elem?.y}
+                canvasContext={context}
+                color={i === 0 ? 'red' : 'green'}
+                radius={30}
+                updateMovement={updateMovement}>
+            </Player>
+            // }
+
+        })}
+    </canvas >
+}
+Canvas.defaultProps = {
+    players: [{ x: window.innerWidth, y: window.innerHeight }, { x: window.innerWidth, y: window.innerHeight }]
 }
 
 export default Canvas;
