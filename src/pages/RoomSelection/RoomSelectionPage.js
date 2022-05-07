@@ -13,7 +13,7 @@ export const RoomSelectionPage = () => {
 
   const submit = () => {
     dispatch(upgradeWebSocket(
-      new WebSocket(`ws://localhost:8083/?room=${formField?.current?.getFieldValue('message')}&innerCoords=${JSON.stringify({ x: window.innerWidth, y: window.innerHeight })}`
+      new WebSocket(`ws://146.190.231.201:8083/?room=${formField?.current?.getFieldValue('message')}&innerCoords=${JSON.stringify({ x: window.innerWidth, y: window.innerHeight })}`
       )));
     navigate('/game');
   }
